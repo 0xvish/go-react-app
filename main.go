@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -41,6 +42,25 @@ func main() {
     //return all todos
     app.Get("/api/todo", func(c *fiber.Ctx) error {
         return c.Status(200).JSON(todoList)
+    })
+
+    //update a todo
+    app.Patch("/api/todo/:id", func (c *fiber.Ctx) error {
+        id := c.Params("id")
+        todo := &Todo{}
+
+        if err := c.BodyParser(todo); err != nil {
+            return err
+        }
+
+        for i, todo := range todoList {
+            if fmt.Sprint(todo.ID) == id {
+                todoList[i].Completed = !todoList[i].Completed
+                return c.Status(200).JSON(todoList[i])
+            }
+        }
+
+        return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
     })
 
     log.Fatal(app.Listen(":3000"))
