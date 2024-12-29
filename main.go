@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 )
 
 type Todo struct {
@@ -14,6 +16,11 @@ type Todo struct {
 }
 
 func main() {
+    err := godotenv.Load(".env"); if err != nil {
+        log.Fatal("error loading .env file")
+    }
+
+    PORT := os.Getenv("PORT")
 	app := fiber.New()
 
     todoList := []Todo{}
@@ -63,7 +70,20 @@ func main() {
         return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
     })
 
-    log.Fatal(app.Listen(":3000"))
+    //delete a todo
+    app.Delete("/api/todo/:id", func (c *fiber.Ctx) error {
+        id := c.Params("id")
+
+        for i, todo := range todoList {
+            if fmt.Sprint(todo.ID) == id {
+                todoList = append(todoList[:i], todoList[i+1:]...)
+                return c.Status(404).JSON(fiber.Map{"success": true})
+            }
+        }
+        return c.Status(404).JSON(fiber.Map{"error": "Todo not found"})
+    })
+
+    log.Fatal(app.Listen(":" + PORT))
 
 
 

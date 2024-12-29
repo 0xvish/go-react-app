@@ -1,48 +1,31 @@
-# Binaries for programs and plugins
-*.exe
-*.dll
-*.so
-*.dylib
-*.bin
 
-# Vendor directory
-/vendor/
+.env
+node_modules
 
-# Compiled object files
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
 *.a
-*.out
+*.so
 
-# Build directories
-build/
-bin/
-dist/
+# Folders
+_obj
+_test
+vendor/
 
-# Log files
+# logs
 *.log
 
-# Air config and runtime files
-tmp/
+# Compiled binary files
+*.exe
+*.out
 
-# OS generated files
+# macOS specific files
 .DS_Store
-Thumbs.db
 
-# IDE/editor files
-.idea/
-.vscode/
-*.swp
-*~
-*.sublime-workspace
-*.sublime-project
+# Go specific files
+# Compiled binary for packages and commands
+/bin/
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
 
-# Go environment
-.env
-.env.*
-
-# Go modules
-go.sum
-go.mod~
-
-# Test binaries
-*.test
+# Dependency directories (remove the comment below if you are using dep)
