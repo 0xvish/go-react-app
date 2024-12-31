@@ -19,6 +19,8 @@ vendor/
 *.exe
 *.out
 
+/tmp/
+
 # macOS specific files
 .DS_Store
 
