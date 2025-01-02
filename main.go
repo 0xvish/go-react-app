@@ -56,8 +56,8 @@ func main() {
 
     app.Get("/api/todo", getTodos)
     app.Post("/api/todo", createTodo)
-    // app.Patch("/api/todo/:id", updateTodo)
-    // app.Delete("/api/todo/:id", deleteTodo)
+    app.Patch("/api/todo/:id", updateTodo)
+    app.Delete("/api/todo/:id", deleteTodo)
 
 
     port := os.Getenv("PORT")
@@ -112,5 +112,51 @@ func createTodo (c *fiber.Ctx) error {
 
     return c.Status(201).JSON(todo)
 }
-// func updateTodo (c *fiber.Ctx) error {}
-// func deleteTodo (c *fiber.Ctx) error {}
+func updateTodo (c *fiber.Ctx) error {
+    id := c.Params("id")
+
+    objectID, err := primitive.ObjectIDFromHex(id)
+
+    if err != nil {
+        return c.Status(400).JSON(fiber.Map{"error": "invalid Todo id"})
+    }
+
+    filter := bson.M{"_id": objectID}
+
+    todo := new(Todo)
+    err = collection.FindOne(context.Background(), filter).Decode(&todo)
+
+    if err != nil {
+        return err
+    }
+
+    update := bson.M{"$set": bson.M{"completed": !todo.Completed}}
+
+    _, err = collection.UpdateOne(context.Background(), filter, update)
+    if err != nil {
+        return err
+    }
+
+    return c.Status(200).JSON(fiber.Map{"success": "true"})
+
+}
+func deleteTodo (c *fiber.Ctx) error {
+    id := c.Params("id")
+
+    objectID, err := primitive.ObjectIDFromHex(id)
+
+    if err != nil {
+        return c.Status(400).JSON(fiber.Map{"error":"invalid Todo id"})
+    }
+
+    filter := bson.M{"_id": objectID}
+
+    _, err = collection.DeleteOne(context.Background(), filter)
+
+    if err != nil {
+        return err
+    }
+
+    return c.Status(200).JSON(fiber.Map{"success": "true"})
+
+}
