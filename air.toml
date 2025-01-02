@@ -1,9 +1,0 @@
-root = "." # root directory of the project
-tmp_dir = "tmp" # temporary directory for storing intermediate files
-
-[build] # build configuration
-    bin = "main" # output directory for the binary
-    cmd = "go build -o {{.Output}} {{.Input}}" # build command
-    exclude = ["tmp/*", "client/*"] # exclude directories from build
-    include = ["**/*.go"] # include files for build
-    ignore = ["tmp/*"] # ignore directories for build
